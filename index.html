@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Model Viewer GLB</title>
+
+<!-- 🔥 IMPORTANTE: cargar model-viewer -->
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+}
+
+/* visor */
+model-viewer {
+    width: 100vw;
+    height: 100vh;
+    background: #222;
+}
+
+/* UI */
+.controls {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 MODELO -->
+<model-viewer 
+    id="visor"
+    camera-controls
+    auto-rotate
+    touch-action="pan-y"
+    src="DamagedHelmet.glb"
+    alt="Modelo 3D">
+    
+    <div class="controls">
+        3D MODEL:
+        <select id="variant"></select>
+    </div>
+
+</model-viewer>
+
+<script>
+
+const visor = document.querySelector("#visor");
+const select = document.querySelector("#variant");
+
+// 🔥 cuando carga el modelo
+visor.addEventListener('load', () => {
+
+    const variants = visor.availableVariants;
+
+    // limpiar opciones
+    select.innerHTML = "";
+
+    // agregar variantes si existen
+    if (variants.length > 0) {
+
+        variants.forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            select.appendChild(option);
+        });
+
+        // opción default
+        const option = document.createElement('option');
+        option.value = 'default';
+        option.textContent = 'Default';
+        select.appendChild(option);
+
+    } else {
+        // si no hay variantes
+        const option = document.createElement('option');
+        option.textContent = "Sin variantes";
+        select.appendChild(option);
+    }
+
+});
+
+// 🔥 cambiar variante
+select.addEventListener('change', (e) => {
+    visor.variantName = e.target.value === 'default' ? null : e.target.value;
+});
+
+</script>
+
+</body>
+</html>
